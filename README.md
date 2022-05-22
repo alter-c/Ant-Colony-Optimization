@@ -1,2 +1,2 @@
-# TSP
-TSP求解算法：蚁群算法(ACO)
+# Ant Colony Optimization
+利用蚁群算法(ACO)求解TSP问题
