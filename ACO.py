@@ -1,5 +1,6 @@
 import random
 import os
+import matplotlib.pyplot as plt
 
 os.system('cls')
 
@@ -90,14 +91,26 @@ def ant_optimize(best_list,min_distance):
 
     return (best_list,min_distance)
 
+def plot(distance_list):
+    """绘制搜索过程最短路程变化"""
+    iter = range(len(distance_list))
+    plt.title('Search Process')
+    plt.xlabel('Iteration')
+    plt.ylabel('Min distance')
+    plt.plot(iter,distance_list,color='r')
+    plt.show()
+
 
 set_pheromone()
 set_distance()
 min_distance = 1e5 #  最短路程
 best_list = [] # 最优路线
+distance_list = [] # 记录最短路程变化
 for iter in range(maxiter):
     (best_list,min_distance) = ant_optimize(best_list,min_distance)
+    distance_list.append(min_distance)
     update_pheromone(best_list)
-    
+
+plot(distance_list)
 print("最优路线:" + str(best_list))
 print("最短路程:" + str(min_distance))
