@@ -5,16 +5,18 @@ from math import *
 
 os.system('cls')
 
-num_city = 6 # 城市数量
-num_ant = 20 # 蚂蚁数量
+num_city = 26 # 城市数量
+num_ant = 50 # 蚂蚁数量
 rho = 0.5 # 信息素挥发率
+kesai = 0.5 # 信息素负反馈调节率
 alpha = 1 # 信息素重要程度
-beta = 1 # 启发信息重要程度
-q = 1 # 信息素增强系数
+beta = 3 # 启发信息重要程度
+q = 100 # 信息素增强系数
 city = range(num_city) # 城市数组
 distance = [] # 城市距离矩阵
 pheromone = [] # 信息素矩阵
-maxiter = 100 # 最大迭代次数
+pheromone0 = q/(num_city*(num_city-1)) # 信息素含量基础值
+maxiter = 20 # 最大迭代次数
 
 
 def set_distance():
@@ -34,7 +36,7 @@ def set_pheromone():
     for i in range(num_city):
         pheromone.append([])
         for j in range(num_city):
-            p = 0 if i==j else q/(num_city*(num_city-1))
+            p = 0 if i==j else pheromone0
             pheromone[i].append(p)
 
 def roulette_select(current_city,unvisit_list):
@@ -87,6 +89,8 @@ def ant_optimize(best_list,min_distance):
                 break
             # 存在未访问城市时,根据信息素量选择下一访问城市(轮盘赌选法)
             next_visit = roulette_select(visit_list[-1],unvisit_list)
+            # 蚂蚁每走过一条路径,会由负反馈调整该路径上的信息素含量(防止蚁群只走一条路线,陷入局部极小值)
+            pheromone[visit_list[-1]][next_visit] = (1-kesai)*pheromone[visit_list[-1]][next_visit] + kesai*pheromone0
             unvisit_list.remove(next_visit)
             visit_list.append(next_visit)
             distance_sum += distance[visit_list[-2]][visit_list[-1]]
@@ -105,6 +109,8 @@ def plot(distance_list):
     plt.ylabel('Min distance')
     plt.plot(iter,distance_list,color='r')
     plt.show()
+
+
 
 set_pheromone()
 set_distance()
