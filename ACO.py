@@ -29,7 +29,6 @@ def set_distance():
             for i in range(len(l)):
                 l[i] = float(l[i])
             distance.append(l)
-    return distance
 
 def set_pheromone():
     """初始化信息素矩阵"""
